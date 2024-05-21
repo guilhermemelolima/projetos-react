@@ -1,12 +1,11 @@
 
 import style from './Button.module.css'
 
-function Button({value, text, id}) {
-    if (id === 'operador'){
-        return <button value={value} className={style.btn} id={style.operador}>{text}</button>
-    }else{
-        return <button value={value} className={style.btn} >{text}</button>
-    }  
+function Button({value, text, id, onClick}) {
+    return <button value={value}  className={style.btn}  
+        id = {`${id === 'operador' ? style.operador: '' }`} onClick={() => onClick(value)}> 
+        {text} 
+    </button> 
 }
 
 export default Button

@@ -1,8 +1,8 @@
 import style from './Input.module.css'
 
-function Input({type}) {
+function Input({type, value}) {
   return (
-    <input type={type} id={style.input}/>
+    <input type={type} className={style.inputText} value={value} readOnly/>
   )
 }
 
