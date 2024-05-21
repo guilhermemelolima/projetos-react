@@ -1,0 +1,24 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #E9E0E9;
+}
+.container{
+    width: 22em;
+    padding: 2em;
+    margin: 5em 76em 0 76em;
+    background-color: #FFFFFF;
+    border-radius: 1em;
+}
+.containerBtns{
+    display: grid;
+    gap:0.5em;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}

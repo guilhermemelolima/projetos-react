@@ -1,0 +1,20 @@
+.btn{
+    font-weight: 580;
+    font-size: 12pt;
+    padding: 1em;
+    border: none;
+    border-radius: .5em;
+    background-color: #EDEDED;
+    color: #222222;
+}
+.btn:hover{
+    background-color: #222222;
+    color: #EEEEEE;
+    transform: scale(0.9);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#operador{
+    color:#1e90ff;
+}
