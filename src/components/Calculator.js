@@ -1,31 +1,71 @@
 
-//
-import {useState} from 'react'
+// Imports do react
+import {useState} from 'react';
 
 //Componentes de layout
-import Button from './layout/Button'
-import Input from './layout/Input'
+import Button from './layout/Button';
+import Input from './layout/Input';
 
 //CSS
-import style from './Calculator.module.css'
+import style from './Calculator.module.css';
+
 function Calculator() {
 
-    const [operacao, setOperacao] = useState('')
-    const [operador, setOperador] = useState('')
+    const [operacao, setOperacao] = useState("");
     
     function calcula(operacao){
-        
-    }
 
+        const vetOperacao = operacao.split(" ");
+        console.log(vetOperacao);
+
+        for (let i = 0; i < vetOperacao.length; i++) {
+            if (vetOperacao[i] === "*") {
+                console.log("Achei um * em " + i)
+            } else if (vetOperacao[i] === "/") {
+                console.log("Achei um / em " + i)
+            } else if (vetOperacao[i] === "+") {
+                console.log("Achei um + em " + i)
+            } else if (vetOperacao[i] === "-") {
+                console.log("Achei um - em " + i)
+            }
+        }
+
+        // FINDINDX
+        // const vetor = ['apple', 'banana', 'orange', 'grape'];
+        // const stringParaEncontrar = 'banana';
+
+        // const indice = vetor.findIndex(elemento => elemento === stringParaEncontrar);
+        // if (indice !== -1) {
+        // console.log(`${stringParaEncontrar} foi encontrado no índice ${indice}.`);
+        // } else {
+        // console.log(`${stringParaEncontrar} não foi encontrado no vetor.`);
+        // }
+
+
+    }
+ 
     function handleClick(value) {
+        const operadores = ['+','-','*','/','%'] ;
+
         if (value === 'AC'){
-            setOperacao('')
+            setOperacao('');
+
         }else if (value === 'DEL') {
-            setOperacao((prev) => prev.slice(0, -1))
-        }else if(['+','-','*','/','%'].includes(value)){
-            setOperador(value)
+            setOperacao((prev) => prev.slice(0, -1));
+
+        }else if(operadores.includes(value)){
+            if (operacao === "" || !operadores.includes(operacao.slice(-1))){
+                setOperacao((prev) => {
+                    if (prev === "" || prev.slice(-1) === " ") {
+                        return prev + value
+                    }else{
+                        return prev + " " + value
+                    }
+                });
+            }
         }else if(value === '='){
-            calcula(operacao)
+            calcula(operacao);
+
         }else{
             setOperacao((prev) => prev + value);
         }
@@ -62,8 +102,7 @@ function Calculator() {
             <Button value="=" text="=" id="operador" onClick={handleClick}/>
 
         </div>
-    </div>
-    )
+    </div>)
 }
 
 export default Calculator
