@@ -1,73 +1,90 @@
 
 // Imports do react
-import {useState} from 'react';
+import {useState} from "react";
 
 //Componentes de layout
-import Button from './layout/Button';
-import Input from './layout/Input';
+import Button from "./layout/Button";
+import Input from "./layout/Input";
 
 //CSS
-import style from './Calculator.module.css';
+import style from "./Calculator.module.css";
 
 function Calculator() {
-
     const [operacao, setOperacao] = useState("");
-    
-    function calcula(operacao){
-
-        const vetOperacao = operacao.split(" ");
-        console.log(vetOperacao);
+    function calcular(vetOperacao) {
+        let resultado = 0;
 
         for (let i = 0; i < vetOperacao.length; i++) {
             if (vetOperacao[i] === "*") {
-                console.log("Achei um * em " + i)
+                resultado = parseFloat(vetOperacao[i - 1]) * parseFloat(vetOperacao[i + 1]);
+                vetOperacao.splice(i - 1, 3, resultado.toString());
+                i -= 2;
             } else if (vetOperacao[i] === "/") {
-                console.log("Achei um / em " + i)
-            } else if (vetOperacao[i] === "+") {
-                console.log("Achei um + em " + i)
-            } else if (vetOperacao[i] === "-") {
-                console.log("Achei um - em " + i)
+                resultado = parseFloat(vetOperacao[i - 1]) / parseFloat(vetOperacao[i + 1]);
+                vetOperacao.splice(i - 1, 3, resultado.toString());
+                i -= 2;
             }
+            console.log("vetOperacao após a iteração " + i + ": ", vetOperacao);
         }
 
-        // FINDINDX
-        // const vetor = ['apple', 'banana', 'orange', 'grape'];
-        // const stringParaEncontrar = 'banana';
+        for (let i = 0; i < vetOperacao.length; i++) {
+            if (vetOperacao[i] === "+") {
+                resultado = parseFloat(vetOperacao[i - 1]) + parseFloat(vetOperacao[i + 1]);
+                vetOperacao.splice(i - 1, 3, resultado.toString());
+                i -= 2;
+            } else if (vetOperacao[i] === "-") {
+                resultado = parseFloat(vetOperacao[i - 1]) - parseFloat(vetOperacao[i + 1]);
+                vetOperacao.splice(i - 1, 3, resultado.toString());
+                i -= 2;
+            }
+            console.log("vetOperacao após a iteração " + i + ": ", vetOperacao);
+        }
 
-        // const indice = vetor.findIndex(elemento => elemento === stringParaEncontrar);
-        // if (indice !== -1) {
-        // console.log(`${stringParaEncontrar} foi encontrado no índice ${indice}.`);
-        // } else {
-        // console.log(`${stringParaEncontrar} não foi encontrado no vetor.`);
-        // }
-
-
+        setOperacao(resultado.toString());
     }
+    
  
     function handleClick(value) {
-        const operadores = ['+','-','*','/','%'] ;
+        const operadores = ["+","-","*","/","%"] ;
 
-        if (value === 'AC'){
-            setOperacao('');
-
-        }else if (value === 'DEL') {
-            setOperacao((prev) => prev.slice(0, -1));
-
+        if (value === "AC"){
+            setOperacao("");
+        }else if (value === "DEL") {
+            setOperacao((prev) => {
+                if (prev !== null){
+                    let array = prev.split("")
+                    array.pop()
+                    return array.join("")
+                }else{
+                    return "";
+                }
+            });
         }else if(operadores.includes(value)){
-            if (operacao === "" || !operadores.includes(operacao.slice(-1))){
-                setOperacao((prev) => {
-                    if (prev === "" || prev.slice(-1) === " ") {
-                        return prev + value
-                    }else{
-                        return prev + " " + value
-                    }
-                });
+            if (operacao !== "") {
+                if(!operadores.includes(operacao[operacao.length-2]) && !operadores.includes(operacao[operacao.length-1])){
+                setOperacao(prevState => {
+                    return prevState + " " + value                    
+                })
+                }
             }
-        }else if(value === '='){
-            calcula(operacao);
-
+        }else if(value === "="){
+            let vetOperacao = operacao.split(" ")
+            if (operadores.includes(vetOperacao[vetOperacao.length - 1])) {
+                vetOperacao.pop()
+                if (vetOperacao.length > 2) {
+                    calcular(vetOperacao)                    
+                }
+            }else{
+                calcular(vetOperacao)
+            }
         }else{
-            setOperacao((prev) => prev + value);
+            setOperacao((prevState) => {
+                if (!operadores.includes(prevState[prevState.length - 1])) {
+                    return prevState + value
+                }else{
+                    return prevState + " " + value
+                }
+            });
         }
     }
 
