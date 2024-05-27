@@ -16,30 +16,55 @@ function Calculator() {
 
         for (let i = 0; i < vetOperacao.length; i++) {
             if (vetOperacao[i] === "*") {
-                resultado = parseFloat(vetOperacao[i - 1]) * parseFloat(vetOperacao[i + 1]);
-                vetOperacao.splice(i - 1, 3, resultado.toString());
-                i -= 2;
+                if (vetOperacao[i+2] === "%"){
+                    resultado = parseFloat(vetOperacao[i - 1]) * (parseFloat(vetOperacao[i + 1])/ 100);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }else{
+                    resultado = parseFloat(vetOperacao[i - 1]) * parseFloat(vetOperacao[i + 1]);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }
+                
             } else if (vetOperacao[i] === "/") {
-                resultado = parseFloat(vetOperacao[i - 1]) / parseFloat(vetOperacao[i + 1]);
-                vetOperacao.splice(i - 1, 3, resultado.toString());
-                i -= 2;
+                if (vetOperacao[i + 1] === "0" || vetOperacao[i + 1] === "00"){
+                    return setOperacao("Divisão é possivel :(")
+                }
+                if (vetOperacao[i+2] === "%"){
+                    resultado = parseFloat(vetOperacao[i - 1]) / (parseFloat(vetOperacao[i + 1])/ 100);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }else{
+                    resultado = parseFloat(vetOperacao[i - 1]) / parseFloat(vetOperacao[i + 1]);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }
             }
-            console.log("vetOperacao após a iteração " + i + ": ", vetOperacao);
         }
 
         for (let i = 0; i < vetOperacao.length; i++) {
             if (vetOperacao[i] === "+") {
-                resultado = parseFloat(vetOperacao[i - 1]) + parseFloat(vetOperacao[i + 1]);
-                vetOperacao.splice(i - 1, 3, resultado.toString());
-                i -= 2;
+                if (vetOperacao[i+2] === "%"){
+                    resultado = parseFloat(vetOperacao[i - 1]) + (parseFloat(vetOperacao[i + 1])/ 100);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }else{
+                    resultado = parseFloat(vetOperacao[i - 1]) + parseFloat(vetOperacao[i + 1]);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }
             } else if (vetOperacao[i] === "-") {
-                resultado = parseFloat(vetOperacao[i - 1]) - parseFloat(vetOperacao[i + 1]);
-                vetOperacao.splice(i - 1, 3, resultado.toString());
-                i -= 2;
+                if (vetOperacao[i+2] === "%"){
+                    resultado = parseFloat(vetOperacao[i - 1]) - (parseFloat(vetOperacao[i + 1])/ 100);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }else{
+                    resultado = parseFloat(vetOperacao[i - 1]) - parseFloat(vetOperacao[i + 1]);
+                    vetOperacao.splice(i - 1, 3, resultado.toString());
+                    i -= 2;
+                }
             }
-            console.log("vetOperacao após a iteração " + i + ": ", vetOperacao);
         }
-
         setOperacao(resultado.toString());
     }
     
@@ -59,16 +84,24 @@ function Calculator() {
                     return "";
                 }
             });
+        }else if (value === "-" && operacao === "") {
+            setOperacao(prevState => prevState + value);
         }else if(operadores.includes(value)){
             if (operacao !== "") {
-                if(!operadores.includes(operacao[operacao.length-2]) && !operadores.includes(operacao[operacao.length-1])){
-                setOperacao(prevState => {
-                    return prevState + " " + value                    
-                })
+                if (operacao[operacao.length - 1] === " " && !operadores.includes(operacao[operacao.length-2])){
+                    setOperacao(prevState => prevState + value )
+                }else if(!operadores.includes(operacao[operacao.length-2]) && !operadores.includes(operacao[operacao.length-1])){
+                    setOperacao(prevState => prevState + " " + value )
+                }
+                if (operacao[operacao.length -1] === "%"){
+                    setOperacao(prevState => prevState + " " + value)
                 }
             }
         }else if(value === "="){
             let vetOperacao = operacao.split(" ")
+            if(vetOperacao[vetOperacao.length - 1] === "%"){
+                calcular(vetOperacao)
+            }
             if (operadores.includes(vetOperacao[vetOperacao.length - 1])) {
                 vetOperacao.pop()
                 if (vetOperacao.length > 2) {
@@ -79,6 +112,9 @@ function Calculator() {
             }
         }else{
             setOperacao((prevState) => {
+                if(operacao === '-'){
+                    return prevState + value
+                }
                 if (!operadores.includes(prevState[prevState.length - 1])) {
                     return prevState + value
                 }else{
